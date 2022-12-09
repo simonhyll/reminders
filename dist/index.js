@@ -30,7 +30,6 @@ const getAllFiles = function (dirPath, arrayOfFiles) {
 exports["default"] = async () => {
     console.log("Getting reminders");
     const reminders = getAllFiles(".github/reminders", []);
-    console.log(reminders);
     console.log("Connecting");
     const octokit = github.getOctokit(process.env.GITHUB_TOKEN ? process.env.GITHUB_TOKEN : '');
     console.log("Getting issues");
@@ -55,13 +54,14 @@ exports["default"] = async () => {
             const filename = path.relative('.github/reminders', file_path).replaceAll('\\', '/');
             const footer = "<sub><h6>This reminder was generated from `" + id + "` in <a href=\"https://github.com/" + owner + "/" + repo + "/blob/main/" + relPath + "#L" + lineNr + "\">" + filename + "</a></h6></sub>";
             const issue = issues.find((val) => val.body?.includes(footer));
-            console.log("Reminder exists, updating");
             reminder.body += tasks + "___\n";
             reminder.body += footer;
             if (issue) {
+                console.log("Reminder exists, processing");
                 const liveTasks = issue.body?.replace(footer, "").replace(reminder.body, "").replace("___\n", "").split('\n').filter((val) => val !== "");
                 reminder.assignees = [...new Set([...issue.assignees ? issue.assignees.map((val) => val.login) : [], ...reminder.assignees])];
                 if (liveTasks?.map((val) => val.startsWith('- [x]')).every((val) => val === true)) {
+                    console.log('All tasks solved, closing the issue');
                     await octokit.rest.issues.update({
                         owner: owner,
                         repo: repo,
@@ -73,7 +73,7 @@ exports["default"] = async () => {
                 const schedule = crontab.parseExpression(reminder.schedule).prev();
                 const last_update = new Date(issue.closed_at ? issue.closed_at : issue.created_at);
                 if (new Date(schedule.toString()) > last_update && issue.state === 'closed') {
-                    console.log("Reopening reminder");
+                    console.log("Reopening reminder as part of schedule");
                     octokit.rest.issues.update({
                         owner: owner,
                         repo: repo,

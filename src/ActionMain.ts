@@ -15,7 +15,7 @@ const getAllFiles = function (dirPath: string, arrayOfFiles: string[]) {
         if (fs.statSync(dirPath + "/" + file).isDirectory()) {
             arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles)
         } else {
-            arrayOfFiles.push(path.join( dirPath, "/", file))
+            arrayOfFiles.push(path.join(dirPath, "/", file))
         }
     })
 
@@ -57,16 +57,17 @@ export default async () => {
             const footer = "<sub><h6>This reminder was generated from `" + id + "` in <a href=\"https://github.com/" + owner + "/" + repo + "/blob/main/" + relPath + "#L" + lineNr + "\">" + filename + "</a></h6></sub>"
             const issue: any = issues.find((val: any) => val.body?.includes(footer))
 
-            console.log("Reminder exists, updating")
 
             reminder.body += tasks + "___\n"
             reminder.body += footer
             if (issue) {
+                console.log("Reminder exists, processing")
                 const liveTasks = issue.body?.replace(footer, "").replace(reminder.body, "").replace("___\n", "").split('\n').filter((val: string) => val !== "")
 
                 reminder.assignees = [...new Set([...issue.assignees ? issue.assignees.map((val: any) => val.login) : [], ...reminder.assignees])]
 
                 if (liveTasks?.map((val: string) => val.startsWith('- [x]')).every((val: boolean) => val === true)) {
+                    console.log('All tasks solved, closing the issue')
                     await octokit.rest.issues.update({
                         owner: owner,
                         repo: repo,
@@ -80,7 +81,7 @@ export default async () => {
                 const last_update = new Date(issue.closed_at ? issue.closed_at : issue.created_at)
 
                 if (new Date(schedule.toString()) > last_update && issue.state === 'closed') {
-                    console.log("Reopening reminder")
+                    console.log("Reopening reminder as part of schedule")
                     octokit.rest.issues.update({
                         owner: owner,
                         repo: repo,
