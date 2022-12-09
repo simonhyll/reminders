@@ -59,6 +59,7 @@ exports["default"] = async () => {
             if (issue) {
                 console.log("Reminder exists, processing");
                 const liveTasks = issue.body?.replace(footer, "").replace(reminder.body, "").replace("___\n", "").split('\n').filter((val) => val !== "");
+                console.log(liveTasks);
                 reminder.assignees = [...new Set([...issue.assignees ? issue.assignees.map((val) => val.login) : [], ...reminder.assignees])];
                 if (liveTasks?.map((val) => val.startsWith('- [x]')).every((val) => val === true)) {
                     console.log('All tasks solved, closing the issue');

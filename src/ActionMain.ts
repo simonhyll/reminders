@@ -63,7 +63,7 @@ export default async () => {
             if (issue) {
                 console.log("Reminder exists, processing")
                 const liveTasks = issue.body?.replace(footer, "").replace(reminder.body, "").replace("___\n", "").split('\n').filter((val: string) => val !== "")
-
+                console.log(liveTasks)
                 reminder.assignees = [...new Set([...issue.assignees ? issue.assignees.map((val: any) => val.login) : [], ...reminder.assignees])]
 
                 if (liveTasks?.map((val: string) => val.startsWith('- [x]')).every((val: boolean) => val === true)) {
