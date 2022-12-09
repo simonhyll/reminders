@@ -1,6 +1,7 @@
 name: Reminders
 
 on:
+  workflow_dispatch:
   schedule:
     - "0 0 * * *"
   push:
@@ -13,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  todos:
+  reminders:
     runs-on: ubuntu-latest
 
     steps:
