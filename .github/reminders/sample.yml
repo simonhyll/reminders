@@ -1,0 +1,11 @@
+sample:
+  schedule: "0 0 * * *"
+  assignees: ["simonhyll"]
+  labels: ["reminder :alarm_clock:"]
+  title: "Annoy Simon"
+  body: |
+    # This is a descriptive test
+    This is the sort of place to describe what needs to be done.
+  tasks:
+    - Tasks are the things you need to do.
+    - Once you check them all, the issue will be closed at the next run.

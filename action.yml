@@ -1,0 +1,10 @@
+name: "Reminders"
+author: "simonhyll"
+description: "Creates reminder issues"
+branding:
+  color: blue
+  icon: aperture
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+  

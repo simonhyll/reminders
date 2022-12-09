@@ -1,0 +1,24 @@
+{
+    "name": "reminders",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Reminders Action",
+    "main": "lib/Entry.js",
+    "scripts": {
+        "build": "tsc",
+        "dist": "ncc build",
+        "start": "tsm ."
+    },
+    "dependencies": {
+        "@actions/core": "^1.10.0",
+        "@actions/github": "^5.1.1",
+        "@types/node": "^18.11.12",
+        "@vercel/ncc": "0.33",
+        "cron-parser": "^4.7.0",
+        "nodemon": "^2.0.20",
+        "ts-node": "^10.9.1",
+        "tsm": "^2.3.0",
+        "typescript": "^4.9.4",
+        "yaml": "^2.1.3"
+    }
+}
